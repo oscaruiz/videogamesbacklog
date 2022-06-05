@@ -1,12 +1,9 @@
 package com.example.videogamesbacklog.Model;
 
 import lombok.Data;
-import org.hibernate.annotations.Entity;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
 
 @Data
 @Entity

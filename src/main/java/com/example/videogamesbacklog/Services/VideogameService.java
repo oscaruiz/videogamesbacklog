@@ -1,9 +1,11 @@
 package com.example.videogamesbacklog.Services;
 
 import com.example.videogamesbacklog.Model.Videogame;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 
 public interface VideogameService {
     Videogame create(Videogame videogame);
