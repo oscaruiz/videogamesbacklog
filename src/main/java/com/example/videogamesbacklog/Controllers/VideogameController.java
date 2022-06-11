@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1")
 public class VideogameController {
 
-    private VideogameService videogameService;
+    private final VideogameService videogameService;
 
     public VideogameController(VideogameService videogameService){
         this.videogameService = videogameService;
