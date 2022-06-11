@@ -2,15 +2,16 @@ package com.example.videogamesbacklog.Services;
 
 import com.example.videogamesbacklog.Repository.VideogameRepository;
 import com.example.videogamesbacklog.Model.Videogame;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class VideogameServiceImpl implements VideogameService{
 
+    private static final Logger logger = LogManager.getLogger(VideogameServiceImpl.class);
     private final VideogameRepository videogameRepository;
 
     public VideogameServiceImpl(VideogameRepository videogameRepository) {
@@ -19,22 +20,26 @@ public class VideogameServiceImpl implements VideogameService{
 
     @Override
     public Videogame create(Videogame videogame) {
+        logger.info("Created videogame to the database: {}", videogame);
         return videogameRepository.save(videogame);
     }
 
     @Override
     public Optional<Videogame> findById(Long id) {
+        logger.info("Find videogame with id: {}", id);
         return videogameRepository.findById(id);
     }
 
     @Override
     public boolean delete(Long id) {
+        logger.info("Delete product with id: {}", id);
         videogameRepository.deleteById(id);
         return true;
     }
 
     @Override
     public Videogame update(Long id, Videogame videogameParam) {
+        logger.info("Update videogame: {}", videogameParam);
         Optional<Videogame> videogame = videogameRepository.findById(id);
         if(videogame.isPresent()){
             Videogame tmp = videogame.get();
@@ -51,16 +56,12 @@ public class VideogameServiceImpl implements VideogameService{
 
             return create(tmp);
         }
-        return null; //TO-DO IMPROVE
+        return null;
     }
 
     @Override
     public List<Videogame> getAllVideogames() {
-        List<Videogame> allVideogames = new ArrayList<>();
-        Iterable<Videogame> videogames = videogameRepository.findAll();
-        for (Videogame videogame : videogames) {
-            allVideogames.add(videogame);
-        }
-        return allVideogames;
+        logger.info("Find all videogames");
+        return videogameRepository.findAll();
     }
 }

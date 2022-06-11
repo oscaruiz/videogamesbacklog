@@ -2,11 +2,11 @@ package com.example.videogamesbacklog.Controllers;
 
 import com.example.videogamesbacklog.Model.Videogame;
 import com.example.videogamesbacklog.Services.VideogameService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -16,36 +16,72 @@ import java.util.Optional;
 public class VideogameController {
 
     private final VideogameService videogameService;
+    private static final Logger logger = LogManager.getLogger(VideogameController.class);
 
     public VideogameController(VideogameService videogameService){
         this.videogameService = videogameService;
     }
 
-    @PostMapping("videogame")
-    public ResponseEntity<Videogame> createReport(@RequestBody Videogame videogame){
+    /**
+     * Creates a new videogame
+     * @param videogame the videogame to create.
+     * @return  the created videogame.
+     */
+    @PostMapping("/videogame")
+    public ResponseEntity<Videogame> createVideogame(@RequestBody Videogame videogame){
+        logger.info("Creating new videogame with title: {}, platform: {}", videogame.getTitle(), videogame.getPlatform());
         return new ResponseEntity<>(this.videogameService.create(videogame), HttpStatus.CREATED);
     }
 
-    @GetMapping("videogame/{id}")
-    public ResponseEntity<Videogame> getReport(@PathVariable("id") Long id){
-        Optional<Videogame> optionalVideogame = this.videogameService.findById(id);
-        if(optionalVideogame.isPresent()){
-            return new ResponseEntity<>(optionalVideogame.get(), HttpStatus.OK);
-        }else{
-            return ResponseEntity.notFound().build();
+    /**
+     * Returns a videogame with an specified ID
+     * @param id
+     * @return   200 OK if succesfully found.
+     *           404 Not Found if videogame ID is not in the DB.
+     */
+    @GetMapping("/videogame/{id}")
+    public ResponseEntity<Videogame> getVideogame(@PathVariable("id") Long id){
+        try{
+            Optional<Videogame> optionalVideogame = this.videogameService.findById(id);
+            if(optionalVideogame.isPresent()){
+                logger.info("Found the videogame with ID {}", id);
+                return new ResponseEntity<>(optionalVideogame.get(), HttpStatus.OK);
+            }else{
+                logger.info("Not found the videogame with ID {}", id);
+                return ResponseEntity.notFound().build();
+            }
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    /**
+     * Deletes the videogame with the specified IF
+     * @param id    The if of the videogame to delete.
+     * @return  A responseEntity with one of the following status codes:
+     *             200 OK if succesful
+     *             404 Not Found if videogame ID is not in the DB
+     *             500 Internal Error if an error occurs during deletion
+     */
     @DeleteMapping("/videogame/{id}")
-    public ResponseEntity<Void> deleteReport(@PathVariable("id") Long id){
-        this.videogameService.delete(id);
-        return ResponseEntity.noContent().build();
-        //To Do
-        // contemplate when the object is not there
+    public ResponseEntity<?> deleteVideogame(@PathVariable("id") Long id){
+
+        logger.info("Deleting videogame with ID {}", id);
+
+        // Get the existing videogame
+        Optional<Videogame> existingVideogame = videogameService.findById(id);
+
+        return existingVideogame.map(v -> {
+            if (videogameService.delete(v.getId())) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/videogame/{id}")
-    public ResponseEntity<Videogame> updateReports(@PathVariable("id") Long id, @RequestBody Videogame videogame){
+    public ResponseEntity<Videogame> updateVideogames(@PathVariable("id") Long id, @RequestBody Videogame videogame){
         Videogame videogameUpdated = videogameService.update(id,videogame);
         if(videogameUpdated == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,8 +89,13 @@ public class VideogameController {
         return new ResponseEntity<>(videogameUpdated, HttpStatus.OK);
     }
 
+    /**
+     * Return all videogames in the database.
+     *
+     * @return All videogames in the database.
+     */
     @GetMapping("/videogame")
-    public ResponseEntity<List<Videogame>> getReports(){
+    public ResponseEntity<List<Videogame>> getallVideogames(){
         List<Videogame> returnValue;
         returnValue = videogameService.getAllVideogames();
         return new ResponseEntity<>(returnValue,HttpStatus.OK);

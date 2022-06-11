@@ -7,5 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Component
 @Repository
+/**
+ * Persistance layer
+ */
 public interface VideogameRepository extends JpaRepository<Videogame,Long> {
 }
