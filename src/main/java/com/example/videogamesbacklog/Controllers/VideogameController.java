@@ -44,6 +44,15 @@ public class VideogameController {
         // contemplate when the object is not there
     }
 
+    @PutMapping("/videogame/{id}")
+    public ResponseEntity<Videogame> updateReports(@PathVariable("id") Long id, @RequestBody Videogame videogame){
+        Videogame videogameUpdated = videogameService.update(id,videogame);
+        if(videogameUpdated == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(videogameUpdated, HttpStatus.OK);
+    }
+
     @GetMapping("/videogame")
     public ResponseEntity<List<Videogame>> getReports(){
         List<Videogame> returnValue;

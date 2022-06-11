@@ -19,29 +19,45 @@ public class VideogameServiceImpl implements VideogameService{
 
     @Override
     public Videogame create(Videogame videogame) {
-        return this.videogameRepository.save(videogame);
+        return videogameRepository.save(videogame);
     }
 
     @Override
     public Optional<Videogame> findById(Long id) {
-        return this.videogameRepository.findById(id);
+        return videogameRepository.findById(id);
     }
 
     @Override
     public boolean delete(Long id) {
-        this.videogameRepository.deleteById(id);
+        videogameRepository.deleteById(id);
         return true;
     }
 
     @Override
-    public Videogame update(Long id, Videogame videogame) {
-        return null;
+    public Videogame update(Long id, Videogame videogameParam) {
+        Optional<Videogame> videogame = videogameRepository.findById(id);
+        if(videogame.isPresent()){
+            Videogame tmp = videogame.get();
+            if (videogameParam.getPlatform() != null) {
+                tmp.setPlatform(videogameParam.getPlatform());
+            }
+            if (videogameParam.getTitle() != null) {
+                tmp.setTitle(videogameParam.getTitle());
+            }
+
+            if (videogameParam.getYearOfRelease() != null) {
+                tmp.setYearOfRelease(videogameParam.getYearOfRelease());
+            }
+
+            return create(tmp);
+        }
+        return null; //TO-DO IMPROVE
     }
 
     @Override
     public List<Videogame> getAllVideogames() {
         List<Videogame> allVideogames = new ArrayList<>();
-        Iterable<Videogame> videogames = this.videogameRepository.findAll();
+        Iterable<Videogame> videogames = videogameRepository.findAll();
         for (Videogame videogame : videogames) {
             allVideogames.add(videogame);
         }
