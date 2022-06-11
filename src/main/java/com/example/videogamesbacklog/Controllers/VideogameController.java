@@ -14,8 +14,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1")
 public class VideogameController {
-    @Autowired
+
     private VideogameService videogameService;
+
+    public VideogameController(VideogameService videogameService){
+        this.videogameService = videogameService;
+    }
 
     @PostMapping("videogame")
     public ResponseEntity<Videogame> createReport(@RequestBody Videogame videogame){

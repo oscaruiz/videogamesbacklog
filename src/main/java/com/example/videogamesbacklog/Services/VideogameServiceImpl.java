@@ -2,7 +2,6 @@ package com.example.videogamesbacklog.Services;
 
 import com.example.videogamesbacklog.Repository.VideogameRepository;
 import com.example.videogamesbacklog.Model.Videogame;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,8 +11,11 @@ import java.util.Optional;
 @Service
 public class VideogameServiceImpl implements VideogameService{
 
-    @Autowired
-    private VideogameRepository videogameRepository;
+    private final VideogameRepository videogameRepository;
+
+    public VideogameServiceImpl(VideogameRepository videogameRepository) {
+        this.videogameRepository = videogameRepository;
+    }
 
     @Override
     public Videogame create(Videogame videogame) {
