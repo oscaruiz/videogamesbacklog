@@ -50,8 +50,8 @@ public class VideogameServiceImpl implements VideogameService{
                 tmp.setTitle(videogameParam.getTitle());
             }
 
-            if (videogameParam.getYearOfRelease() != null) {
-                tmp.setYearOfRelease(videogameParam.getYearOfRelease());
+            if (videogameParam.getYearofrelease() != null) {
+                tmp.setYearofrelease(videogameParam.getYearofrelease());
             }
 
             return create(tmp);

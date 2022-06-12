@@ -15,5 +15,5 @@ public class Videogame {
 
     private String title;
     private String platform;
-    private String yearOfRelease;
+    private String yearofrelease;
 }
