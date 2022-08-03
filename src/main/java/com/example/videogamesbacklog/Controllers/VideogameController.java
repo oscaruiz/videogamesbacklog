@@ -80,6 +80,13 @@ public class VideogameController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Updates the specified videogame
+     * @param id
+     * @param videogame
+     * @return  The updated videogame if found
+     *          404 Not found, if the videogame was not found
+     */
     @PutMapping("/videogame/{id}")
     public ResponseEntity<Videogame> updateVideogames(@PathVariable("id") Long id, @RequestBody Videogame videogame){
         Videogame videogameUpdated = videogameService.update(id,videogame);
